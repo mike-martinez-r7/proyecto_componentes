@@ -1,2 +1,2 @@
-# proyecto_componentes
+# Proyecto Final
 Proyecto de Diseño de Componentes
