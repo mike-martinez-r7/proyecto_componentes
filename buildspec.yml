@@ -33,17 +33,17 @@ phases:
       - npm install -g mocha
   pre_build:
     commands:
-      - cd client-app && npm install && cd ..
+      - cd client && npm install && cd ..
       - cd api && npm install && cd ..
   build:
     commands:
-      - cd client-app && npm run build && cd ..
+      - cd client && npm run build && cd ..
   post_build:
     commands:
-      - mv ./client-app/build ./build
+      - mv ./client/build ./build
 artifacts:
   secondary-artifacts:
-    client-app:
+    client:
       files:
         - '**/*'
       base-directory: build
