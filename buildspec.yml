@@ -12,11 +12,11 @@ phases:
       - mv ./client-app/build ./build
 artifacts:
   secondary-artifacts:
-    client:
+    client-app:
       files:
-        - '**/*'
+       - '**/*'
       base-directory: build
-    server:
+    api:
       files:
         - '**/*'
       base-directory: api
