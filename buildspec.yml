@@ -2,20 +2,9 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - cd client-app && npm install && cd ..
       - cd api && npm install && cd ..
-  build:
-    commands:
-      - cd client-app && npm run build && cd ..
-  post_build:
-    commands:
-      - mv ./client-app/build ./build
 artifacts:
   secondary-artifacts:
-    client-app:
-      files:
-       - '**/*'
-      base-directory: build
     api:
       files:
         - '**/*'
