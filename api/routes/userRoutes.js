@@ -5,7 +5,8 @@ const routes = () => {
     const userController = require('../controllers/userController')
 
     userRouter.route('/')
-        .get(userController.get);
+        .get(userController.get)
+        .post((req, res) => userController.post(req, res));
 
     return userRouter;
 }
