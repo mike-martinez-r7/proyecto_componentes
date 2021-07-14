@@ -3,24 +3,54 @@ const config = require('../config.js');
 
 const UserController = {
     get : (req, res) => {
-        console.log(`GET from UserController`);
-        
-        return res.send('get from controller'); 
+      let awsConfig = new AWS.Config();
+      
+      AWS.config.update({
+        region: 'us-east-1',
+        accessKeyId: 'AKIAVX4QTOARL7YP2OKJ',
+        secretAccessKey: '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',
+      });
+
+      const docUser = new AWS.DynamoDB.DocumentClient();
+  
+      let params = {
+        TableName: config.aws_table_name
+      };
+  
+      docUser.scan(params, (err, data) => {
+        if (err) {
+          res.send({
+              success: false,
+              message: err
+          });
+        } else {
+          let { Items } = data;
+          res.send({
+              success: true,
+              users: Items
+          });
+        }
+      }); 
     },
 
     post : (req, res) => {
-      AWS.config.update(config.aws_remote_config);
+      let awsConfig = new AWS.Config();
+      
+      AWS.config.update({
+        region: 'us-east-1',
+        accessKeyId: 'AKIAVX4QTOARL7YP2OKJ',
+        secretAccessKey: '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',
+      });
+      
       const docUser = new AWS.DynamoDB.DocumentClient();
-
-      const newUser = {
-        id: 1,
-        email: 'xn1p3r@gmail.com',
-        pass: 123,
-      };
 
       let params = {
         TableName: config.aws_table_name,
-        Item: newUser
+        Item: {
+          id: '2',
+          email: 'mike.martinez.r7@gmail.com',
+          pass: '3333',
+        }
       };
 
       docUser.put(params, (err, data) => {
