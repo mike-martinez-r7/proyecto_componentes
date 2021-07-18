@@ -1,5 +1,6 @@
-const AWS = require('aws-sdk');
+const AWS    = require('aws-sdk');
 const config = require('../config.js');
+const joi    = require('joi');
 
 const UserController = {
     get : (req, res) => {
@@ -14,7 +15,7 @@ const UserController = {
       const docUser = new AWS.DynamoDB.DocumentClient();
   
       let params = {
-        TableName: config.aws_table_name
+        TableName: 'users'
       };
   
       docUser.scan(params, (err, data) => {
@@ -23,33 +24,43 @@ const UserController = {
               success: false,
               message: err
           });
-        } else {
-          let { Items } = data;
-          res.send({
-              success: true,
-              users: Items
-          });
         }
+
+        let { Items } = data;
+        res.send(Items);
       }); 
     },
 
     post : (req, res) => {
-      let awsConfig = new AWS.Config();
-      
-      AWS.config.update({
-        region: 'us-east-1',
-        accessKeyId: 'AKIAVX4QTOARL7YP2OKJ',
-        secretAccessKey: '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',
+      const schema = joi.object({
+        email: joi.string().required(),
+        name: joi.string().required(),
+        lastname: joi.string().required(),
+        datebirth: joi.date().required()
       });
+
+      const { error, value } = schema.validate(req.body);
+
+      if (error) {
+        return res.status(400).send({
+          success: false,
+          message: error,
+          value: value
+        });
+      }
+
+      const awsConfig = new AWS.Config();
+      AWS.config.update(config.aws_remote_config);
       
       const docUser = new AWS.DynamoDB.DocumentClient();
 
       let params = {
-        TableName: config.aws_table_name,
+        TableName: 'users',
         Item: {
-          id: '2',
-          email: 'mike.martinez.r7@gmail.com',
-          pass: '3333',
+          email: req.body.email,
+          name: req.body.name,
+          lastname: req.body.lastname,
+          datebirth: req.body.lastname
         }
       };
 
@@ -60,12 +71,12 @@ const UserController = {
             message: err
           });
         }
+      });
 
-        return res.send({
-          success: true,
-          message: 'User created succesfully!',
-          data: data
-        });
+      return res.send({
+        success: true,
+        message: 'User created succesfully!',
+        data: req.body
       });
     },
 

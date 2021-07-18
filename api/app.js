@@ -1,9 +1,10 @@
 const express = require('express');
+userRouter = require('./routes/userRoutes')();
+
 const port = process.env.PORT || 3000;
 const app  = express();
 
-userRouter = require('./routes/userRoutes')();
-
+app.use(express.json());
 app.use('/api/users', userRouter);
 
 app.get('/api', (req, res) => {
