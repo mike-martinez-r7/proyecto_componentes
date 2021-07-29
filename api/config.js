@@ -1,5 +1,6 @@
 module.exports = {
-  aws_table_name: 'users',
+  users_table_name: 'users',
+  companies_table_name: 'companies',
   aws_local_config: {
     //Provide details for local configuration
   },
