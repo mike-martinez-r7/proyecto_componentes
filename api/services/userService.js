@@ -4,29 +4,22 @@ const config = require('../config.js');
 const joi = require('joi');
 
 const UserService = {
-  getAll : () => {
+  getAll : async () => {
     let awsConfig = new AWS.Config();
     AWS.config.update(config.aws_remote_config);
-
     const docUser = new AWS.DynamoDB.DocumentClient();
 
     let params = {
       TableName: config.users_table_name
     };
-  
-    docUser.scan(params, (err, data) => {
-      if (err) {
-        return { 
-          success: false,
-          error: err
-        };
-      };
 
-      return { 
-        success: true,
-        data: data.Items
-      }; 
-    });
+    let awsRequest = await docUser.scan(params);
+    let data = await awsRequest.promise();
+  
+    return { 
+      success: true,
+      data: data.Items || {}
+    }; 
   },
 
   validate : (userdata) => {

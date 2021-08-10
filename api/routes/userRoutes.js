@@ -5,7 +5,7 @@ const routes = () => {
     const userController = require('../controllers/userController')
 
     userRouter.route('/')
-        .get(userController.list)
+        .get(userController.get)
         .post((req, res) => userController.register(req, res));
 
     return userRouter;

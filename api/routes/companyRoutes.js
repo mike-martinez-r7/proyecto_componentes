@@ -7,7 +7,8 @@ const routes = () => {
     companyRouter
         .get('/:id', (req, res) => companyController.getById(req, res))
         .get('/', (req, res) => companyController.get(req, res))
-        .post('/', (req, res) => companyController.register(req, res));
+        .post('/', (req, res) => companyController.register(req, res))
+        .put('/', (req, res) => companyController.update(req, res));
 
     return companyRouter;
 }

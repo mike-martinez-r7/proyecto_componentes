@@ -2,6 +2,12 @@ const { ConnectContactLens } = require('aws-sdk');
 const CompanyService = require('../services/CompanyService')
 
 const CompanyController = {
+  get : async (req, res) => {
+    let companies = await CompanyService.getAll();
+
+    res.send(companies.data);
+  },
+
   getById : async (req, res) => {
     let company = await CompanyService.getById(req.params.id);
 
@@ -13,12 +19,6 @@ const CompanyController = {
     }
 
     res.send(company.data);
-  },
-
-  get : async (req, res) => {
-    let companies = await CompanyService.getAll();
-
-    res.send(companies.data);
   },
 
   register : (req, res) => {
@@ -47,6 +47,25 @@ const CompanyController = {
       success: true,
       message: 'Company registered succesfully',
       data: companyCreated.data
+    });
+  },
+
+  update : (req, res) => {
+    //Update new data in DB
+    let company = CompanyService.update(req.body);
+
+    if (!company.success) {
+      return res.send({
+        success: false,
+        message: 'There\'s an error when updating the company', 
+        details: company.message
+      });
+    }
+
+    return res.send({
+      success: true,
+      message: 'Company updated succesfully',
+      data: company.data
     });
   }
 }

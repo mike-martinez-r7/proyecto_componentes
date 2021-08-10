@@ -89,6 +89,39 @@ const CompanyService = {
       success: true,
       data: company
     };
+  },
+
+  update : (company) => {
+    //Update data of a company to DynamoDB
+    const awsConfig = new AWS.Config();
+    AWS.config.update(config.aws_remote_config);
+    const docCompany = new AWS.DynamoDB.DocumentClient();
+
+    var params = {
+      TableName: config.companies_table_name,
+      Key: { 'id': company.id },
+      UpdateExpression: 'set descr = :descr, email = :email, name = :name',
+      ExpressionAttributeValues:{
+          ':descr': company.descr,
+          ':email': company.email,
+          ':name': company.name
+      },
+      ReturnValues : 'UPDATED_NEW'
+    };
+
+    docCompany.update(params, (error, data) => {
+      if (error) {
+        return {
+          success: false,
+          message: error
+        };
+      }
+    });
+
+    return {
+      success: true,
+      data: company
+    };
   }
 }
 

@@ -4,12 +4,8 @@ const joi = require('joi');
 const UserService = require('../services/userService.js');
 
 const UserController = {
-  list : (req, res) => {
-    let users = UserService.getAll();
-
-    if (!users.success) {
-      res.send(...users);
-    }
+  get : async (req, res) => {
+    let users = await UserService.getAll();
     
     res.send(users.data);
   },
