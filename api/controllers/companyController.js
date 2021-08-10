@@ -67,6 +67,24 @@ const CompanyController = {
       message: 'Company updated succesfully',
       data: company.data
     });
+  },
+
+  delete : (req, res) => {
+    //Delete a record in DB
+    let company = CompanyService.delete(req.params.id);
+
+    if (!company.success) {
+      return res.send({
+        success: false,
+        message: 'There\'s an error when deleting the company', 
+        details: company.message
+      });
+    }
+
+    return res.send({
+      success: true,
+      message: 'Company deleted succesfully',
+    });
   }
 }
 

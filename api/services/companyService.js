@@ -122,6 +122,31 @@ const CompanyService = {
       success: true,
       data: company
     };
+  },
+
+  delete : (id) => {
+    //Delete a record of a company to DynamoDB
+    const awsConfig = new AWS.Config();
+    AWS.config.update(config.aws_remote_config);
+    const docCompany = new AWS.DynamoDB.DocumentClient();
+
+    var params = {
+      TableName: config.companies_table_name,
+      Key: { 'id': id }
+    };
+
+    docCompany.delete(params, (error, data) => {
+      if (error) {
+        return {
+          success: false,
+          message: error
+        };
+      }
+    });
+
+    return {
+      success: true
+    };
   }
 }
 
