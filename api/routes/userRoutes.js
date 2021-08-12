@@ -6,7 +6,7 @@ const routes = () => {
 
     userRouter.route('/')
         .get(userController.get)
-        .post((req, res) => userController.post(req, res));
+        .post((req, res) => userController.register(req, res));
 
     return userRouter;
 }

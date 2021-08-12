@@ -1,81 +1,55 @@
-const AWS = require('aws-sdk');
+const { v1: uuidv1 } = require('uuid');
 const config = require('../config.js');
+const joi = require('joi');
+const UserService = require('../services/userService.js');
 
 const UserController = {
-    get : (req, res) => {
-      let awsConfig = new AWS.Config();
-      
-      AWS.config.update({
-        region: 'us-east-1',
-        accessKeyId: 'AKIAVX4QTOARL7YP2OKJ',
-        secretAccessKey: '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',
+  get : async (req, res) => {
+    let users = await UserService.getAll();
+    
+    res.send(users.data);
+  },
+
+  register : (req, res) => {
+    //Validate userdata info
+    const { error, value } = UserService.validate(req.body);
+
+    if (error) {
+      return res.status(400).send({
+        success: false,
+        message: error.details
       });
-
-      const docUser = new AWS.DynamoDB.DocumentClient();
-  
-      let params = {
-        TableName: config.aws_table_name
-      };
-  
-      docUser.scan(params, (err, data) => {
-        if (err) {
-          res.send({
-              success: false,
-              message: err
-          });
-        } else {
-          let { Items } = data;
-          res.send({
-              success: true,
-              users: Items
-          });
-        }
-      }); 
-    },
-
-    post : (req, res) => {
-      let awsConfig = new AWS.Config();
-      
-      AWS.config.update({
-        region: 'us-east-1',
-        accessKeyId: 'AKIAVX4QTOARL7YP2OKJ',
-        secretAccessKey: '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',
-      });
-      
-      const docUser = new AWS.DynamoDB.DocumentClient();
-
-      let params = {
-        TableName: config.aws_table_name,
-        Item: {
-          id: '2',
-          email: 'mike.martinez.r7@gmail.com',
-          pass: '3333',
-        }
-      };
-
-      docUser.put(params, (err, data) => {
-        if (err) {
-          return res.send({
-            success: false,
-            message: err
-          });
-        }
-
-        return res.send({
-          success: true,
-          message: 'User created succesfully!',
-          data: data
-        });
-      });
-    },
-
-    put : (req, res) => {
-        console.log('PUT from UserController');
-    },
-
-    del : (req, res) => {
-        console.log('DELETE from UserController');
     }
+
+    //Add additional properties
+    req.body['id'] = uuidv1();
+    req.body['timestamp'] = new Date().toDateString();
+
+    //Save data to DynamoDb
+    const awsConfig = new AWS.Config();
+    AWS.config.update(config.aws_remote_config);
+    const docUser = new AWS.DynamoDB.DocumentClient();
+
+    let params = {
+      TableName: config.users_table_name,
+      Item: { ...req.body }
+    };
+
+    docUser.put(params, (err, data) => {
+      if (err) {
+        return res.send({
+          success: false,
+          message: err
+        });
+      }
+    });
+
+    return res.send({
+      success: true,
+      message: 'User registered succesfully',
+      data: req.body
+    });
+  }
 }
 
 module.exports = UserController;
