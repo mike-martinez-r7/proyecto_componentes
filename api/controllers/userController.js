@@ -1,6 +1,5 @@
 const { v1: uuidv1 } = require('uuid');
 const config = require('../config.js');
-const joi = require('joi');
 const UserService = require('../services/userService.js');
 
 const UserController = {

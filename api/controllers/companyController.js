@@ -1,5 +1,4 @@
-const { ConnectContactLens } = require('aws-sdk');
-const CompanyService = require('../services/CompanyService')
+const CompanyService = require('../services/companyService.js')
 
 const CompanyController = {
   get : async (req, res) => {
