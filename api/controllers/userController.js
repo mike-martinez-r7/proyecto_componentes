@@ -20,34 +20,37 @@ const UserController = {
       });
     }
 
-    //Add additional properties
-    req.body['id'] = uuidv1();
-    req.body['timestamp'] = new Date().toDateString();
+    //Insert data in DB
+    let userCreated = UserService.register(req.body);
 
-    //Save data to DynamoDb
-    const awsConfig = new AWS.Config();
-    AWS.config.update(config.aws_remote_config);
-    const docUser = new AWS.DynamoDB.DocumentClient();
-
-    let params = {
-      TableName: config.users_table_name,
-      Item: { ...req.body }
-    };
-
-    docUser.put(params, (err, data) => {
-      if (err) {
-        return res.send({
-          success: false,
-          message: err
-        });
-      }
-    });
+    if (!userCreated.success) {
+      return res.send({
+        success: false,
+        message: 'There\'s an error when registering the user', 
+        details: userCreated.message
+      });
+    }
 
     return res.send({
       success: true,
       message: 'User registered succesfully',
-      data: req.body
+      data: userCreated.data
     });
+  },
+
+  login : async (req, res) => {
+    //Validate login data
+    const { error, value } = UserService.validateLogin(req.body);
+
+    if (error) {
+      return res.status(400).send({
+        success: false,
+        message: error.details
+      });
+    }
+
+    let login = await UserService.login(req.body);
+    res.send(login);
   }
 }
 
