@@ -4,9 +4,10 @@ const routes = () => {
     const userRouter = express.Router();
     const userController = require('../controllers/userController')
 
-    userRouter.route('/')
-        .get(userController.get)
-        .post((req, res) => userController.register(req, res));
+    userRouter
+        .get('/', (req, res) => userController.get(req, res))
+        .post('/', (req, res) => userController.register(req, res))
+        .post('/login', (req, res) => userController.login(req, res));
 
     return userRouter;
 }
