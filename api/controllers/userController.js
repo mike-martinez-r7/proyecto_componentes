@@ -43,7 +43,7 @@ const UserController = {
     const { error, value } = UserService.validateLogin(req.body);
 
     if (error) {
-      return res.status(400).send({
+      return res.status(401).send({
         success: false,
         message: error.details
       });
