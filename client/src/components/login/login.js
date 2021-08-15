@@ -9,49 +9,59 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [state, setState] = useState({
-    status: '',
-    validEmail: '',
-    validPassword: ''
-  });
+  const [state, setState] = useState('init');
+  const [validEmail, setValidEmail] = useState('');
+  const [validPassword, setValidPassword] = useState('');
 
-  let validate = () => {
+  const validate = () => {
     let isValid = true;
     let emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (emailRegex.test(email)) {
-      setState({validEmail: 'is-valid'});
+      setValidEmail('is-valid');
     } else {
-      setState({validEmail: 'is-invalid'});
+      setValidEmail('is-invalid');
+      isValid = false;
+    }
+
+    if (password !== '') {
+      setValidPassword('is-valid');
+    } else {
+      setValidPassword('is-invalid');
       isValid = false;
     }
 
     return isValid;
   };
 
-  const login = () => {
-    setState({status: 'loading'});
-    
+  const login = (e) => {
+    e.preventDefault();
+
     if (!validate()) {
       setMessage('There are some errors in the form');
     } else {
+      setState('loading');
+      setMessage('');
+
       axios({
         url: 'http://boyataapi-env.eba-rghaf25n.us-east-1.elasticbeanstalk.com/api/users/login',
-        method: 'post',
+        method: 'POST',
         headers: {'Access-Control-Allow-Origin': '*'},
+        responseType: 'json',
         data: {
           email: email,
           password: md5(password)
         }
       })
-      .then(function (response) {
-        console.log(response);
+      .then((response) => {
+        console.log('Success');
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        console.log(error.response.data.message.message);
+        setMessage(error.response.data.message.message);
       });
 
-      setState({status: ''});
+      setState('init');
     }
   };
 
@@ -59,7 +69,7 @@ const Login = () => {
     <div className="login">
       <div className="row">
         <div className="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
-          { state.message === 'loading' ? <Alert color="danger">{ message }</Alert> : '' }
+          { message !== '' ? <Alert color="danger">{ message }</Alert> : '' }
         </div>
       </div>
       <div className="row">
@@ -69,16 +79,16 @@ const Login = () => {
       </div>
       <div className="row">
         <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-          <Form>
+          <Form onSubmit={ login }>
             <FormGroup>
               <Input 
                 type="text" 
                 name="email" 
                 id="email" 
-                value={email}
+                value={ email }
                 placeholder="Email" 
-                onChange={e => setEmail(e.target.value)} 
-                className={ state.validEmail }
+                onChange={ e => setEmail(e.target.value) } 
+                className={ validEmail }
               />
             </FormGroup>
             <FormGroup>
@@ -86,18 +96,16 @@ const Login = () => {
                 type="password" 
                 name="password" 
                 id="password"
-                value={password} 
+                value={ password } 
                 placeholder="Password" 
-                onChange={e => setPassword(e.target.value)} 
+                onChange={ e => setPassword(e.target.value) } 
+                className={ validPassword }
               />
             </FormGroup>
 
-            <Button 
-              onClick={login} 
-              color="primary" 
-            >
+            <Button type="sumbit" color="primary">
               <span className="mr-4">Login</span>&nbsp;
-              { state.status === 'loading' ? <Spinner color="light" size="sm"><span className="visually-hidden">Loading...</span></Spinner>: '' }
+              { state === 'loading' ? <Spinner color="light" size="sm"><span className="visually-hidden">Loading...</span></Spinner>: '' }
             </Button>
           </Form>
         </div>
