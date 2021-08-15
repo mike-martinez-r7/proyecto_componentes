@@ -54,11 +54,11 @@ const Login = () => {
         }
       })
       .then((response) => {
-        console.log('Success');
+        alert('Login OK');
       })
       .catch((error) => {
-        console.log(error.response.data.message.message);
-        setMessage(error.response.data.message.message);
+        console.log(error.response.data.message);
+        //setMessage(error.response.data.message.message);
       });
 
       setState('init');
@@ -69,7 +69,7 @@ const Login = () => {
     <div className="login">
       <div className="row">
         <div className="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
-          { message !== '' ? <Alert color="danger">{ message }</Alert> : '' }
+          { message !== '' ? <Alert id="alert" color="danger">{ message }</Alert> : '' }
         </div>
       </div>
       <div className="row">
