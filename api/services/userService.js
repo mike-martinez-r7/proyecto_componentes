@@ -120,11 +120,18 @@ const UserService = {
     let awsRequest = await docUser.scan(params);
     let data = await awsRequest.promise();
 
+    if (data.Count == 0) {
+      return {
+        success: false,
+        message: 'User or Password are invalid'
+      };
+    }
+
     delete data.Items[0].password;
 
     return {
       success: true,
-      data: data.Items[0] || {}
+      data: data.Items[0]
     };
   },
 }
