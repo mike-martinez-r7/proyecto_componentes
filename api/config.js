@@ -10,4 +10,3 @@ module.exports = {
     secretAccessKey: 'x3jQGCbuN9sFLx3MGuqJGXIIqIMI7rVtnaRy8/aK',
   }
 };
-

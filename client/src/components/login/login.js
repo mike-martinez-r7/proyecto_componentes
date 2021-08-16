@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Button, Input, Form, FormGroup, Spinner, Alert } from 'reactstrap';
+import React, { useState, useContext } from 'react';
+import { Button, Input, Form, FormGroup, Alert } from 'reactstrap';
 import md5 from 'md5';
 import axios from 'axios';
 import './login.css';
+import { AuthContext } from '../../context/context';
 
 const Login = () => {
   // Properties
@@ -12,26 +13,32 @@ const Login = () => {
   const [state, setState] = useState('init');
   const [validEmail, setValidEmail] = useState('');
   const [validPassword, setValidPassword] = useState('');
-
+  const { isUserLogged, setUserLogged } = useContext(AuthContext);
+  
+  //Events
   const validate = () => {
     let isValid = true;
     let emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (emailRegex.test(email)) {
-      setValidEmail('is-valid');
+      setValidEmail('');
     } else {
       setValidEmail('is-invalid');
       isValid = false;
     }
 
     if (password !== '') {
-      setValidPassword('is-valid');
+      setValidPassword('');
     } else {
       setValidPassword('is-invalid');
       isValid = false;
     }
 
     return isValid;
+  };
+
+  const test = () => {
+    setUserLogged(true);
   };
 
   const login = (e) => {
@@ -54,19 +61,34 @@ const Login = () => {
         }
       })
       .then((response) => {
-        alert('Login OK');
+        let userExists = response.data.success;
+
+        if (userExists) {
+          alert('OK');
+          setUserLogged(true);
+        } else {
+          setMessage(response.data.message);
+        }
+
+        setState('init');
       })
       .catch((error) => {
-        console.log(error.response.data.message);
-        //setMessage(error.response.data.message.message);
-      });
+        let errors = '';
 
-      setState('init');
+        error.response.data.message.forEach(e => {
+          errors += e.message;
+        }); 
+
+        setMessage(errors);
+        setState('init');
+      });
     }
   };
 
+  //Render
   return (
     <div className="login">
+      <strong>User logged  ({ isUserLogged.toString() })</strong>
       <div className="row">
         <div className="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
           { message !== '' ? <Alert id="alert" color="danger">{ message }</Alert> : '' }
@@ -103,10 +125,14 @@ const Login = () => {
               />
             </FormGroup>
 
-            <Button type="sumbit" color="primary">
-              <span className="mr-4">Login</span>&nbsp;
-              { state === 'loading' ? <Spinner color="light" size="sm"><span className="visually-hidden">Loading...</span></Spinner>: '' }
+            <Button type="sumbit" color="primary" disabled={ state === 'loading' }>
+              Login&nbsp; 
+              <div className="spinner-border spinner-border-sm" role="status" style={ state === 'loading' ? {display: 'block'} : {display: 'none'} }>
+                <span className="visually-hidden">Loading...</span>
+              </div>
             </Button>
+
+            <Button type="button" onClick={test}>Test</Button>
           </Form>
         </div>
       </div>
