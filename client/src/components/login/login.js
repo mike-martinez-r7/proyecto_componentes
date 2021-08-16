@@ -1,20 +1,23 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Input, Form, FormGroup, Alert } from 'reactstrap';
+import { useHistory } from 'react-router-dom';
 import md5 from 'md5';
 import axios from 'axios';
 import './login.css';
-import { AuthContext } from '../../context/context';
+import { useAuth } from '../../context/context';
 
 const Login = () => {
   // Properties
+  const auth = useAuth();
+  const history = useHistory();
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [state, setState] = useState('init');
   const [validEmail, setValidEmail] = useState('');
   const [validPassword, setValidPassword] = useState('');
-  const { isUserLogged, setUserLogged } = useContext(AuthContext);
-  
+    
   //Events
   const validate = () => {
     let isValid = true;
@@ -35,10 +38,6 @@ const Login = () => {
     }
 
     return isValid;
-  };
-
-  const test = () => {
-    setUserLogged(true);
   };
 
   const login = (e) => {
@@ -64,8 +63,7 @@ const Login = () => {
         let userExists = response.data.success;
 
         if (userExists) {
-          alert('OK');
-          setUserLogged(true);
+          auth.login(response.data.data);
         } else {
           setMessage(response.data.message);
         }
@@ -85,10 +83,15 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    if (auth.user && auth.user.id) {
+      history.push('/main');
+    }
+  });
+
   //Render
   return (
     <div className="login">
-      <strong>User logged  ({ isUserLogged.toString() })</strong>
       <div className="row">
         <div className="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
           { message !== '' ? <Alert id="alert" color="danger">{ message }</Alert> : '' }
@@ -131,8 +134,6 @@ const Login = () => {
                 <span className="visually-hidden">Loading...</span>
               </div>
             </Button>
-
-            <Button type="button" onClick={test}>Test</Button>
           </Form>
         </div>
       </div>
