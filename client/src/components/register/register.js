@@ -180,168 +180,180 @@ const Register = () => {
 
   //Render
   return (
-    <div className="login">
+    <div className="register">
       <div className="row">
-        <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-          { message !== '' ? <div className="alert alert-danger" role="alert">{ message }</div> : '' }
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-          <h1>Register</h1>{state.emailState}
-        </div>
-      </div>
-      <Form onSubmit={ register }>
         <div className="row">
-          <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-            <FormGroup>
-              <Input 
-                type="text" 
-                name="email" 
-                id="email" 
-                value={ formData.email }
-                placeholder="Email" 
-                onChange={ e => setFormData({ ...formData, email: e.target.value }) } 
-                className={ validEmail ? '' : 'is-invalid' }
-              />
-            </FormGroup>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-            <FormGroup>
-              <Input 
-                type="text" 
-                name="name" 
-                id="name" 
-                value={ formData.name }
-                placeholder="Name" 
-                onChange={ e => setFormData({ ...formData, name: e.target.value }) } 
-                className={ validName ? '' : 'is-invalid' }
-              />
-            </FormGroup>
+          <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 text-end d-none d-md-block">
+            <img src={ process.env.PUBLIC_URL + '/img/phone.png' } alt="Mobile" title="Mobile" />
           </div>
           <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-            <FormGroup>
-              <Input 
-                type="text" 
-                name="lastname" 
-                id="lastname" 
-                value={ formData.lastname }
-                placeholder="Lastname" 
-                onChange={ e => setFormData({ ...formData, lastname: e.target.value }) } 
-                className={ validLastname ? '' : 'is-invalid' }
-              />
-            </FormGroup>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-            <FormGroup>
-              <Input 
-                type="password" 
-                name="password" 
-                id="password"
-                value={ formData.password } 
-                placeholder="Password" 
-                onChange={ e => setFormData({ ...formData, password: e.target.value}) } 
-                className={ validPassword ? '' : 'is-invalid' }
-              />
-            </FormGroup>
-          </div>
-          <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-            <FormGroup>
-              <Input 
-                type="password" 
-                name="passwordconfirm" 
-                id="passwordconfirm"
-                value={ formData.passwordconfirm } 
-                placeholder="Cornfirm Password" 
-                onChange={ e => setFormData({ ...formData, passwordconfirm: e.target.value}) } 
-                className={ validPasswordConfirm ? '' : 'is-invalid' }
-              />
-              <small className="text-danger" style={ !passwordMatch ? {display: 'block'} : {display: 'none'} }>* Passwords must match</small>
-            </FormGroup>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-            <FormGroup>
-              <Label for="day">Day</Label>
-              <Input 
-                type="select" 
-                name="day" 
-                id="day" 
-                placeholder="Day" 
-                onChange={ e => setFormData({ ...formData, day: e.target.value}) } 
-                className={ 'form-select' && validDay ? '' : 'is-invalid' }
-              >
-                <option value="0"></option>
-                { getDays().map((value, key) => <option value={value} key={key}>{value}</option>) }
-              </Input>
-            </FormGroup>
-          </div>
-          <div className="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-            <FormGroup>
-              <Label for="month">Month</Label>
-              <Input 
-                type="select" 
-                name="month" 
-                id="month" 
-                placeholder="Month"
-                onChange={ e => setFormData({ ...formData, month: e.target.value}) } 
-                className={ validMonth ? '' : 'is-invalid' }
-              >
-                <option value="0"></option>
-                <option value="1">January</option>
-                <option value="2">February</option>
-                <option value="3">March</option>
-                <option value="4">April</option>
-                <option value="5">May</option>
-                <option value="6">June</option>
-                <option value="7">July</option>
-                <option value="8">August</option>
-                <option value="9">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
-              </Input>
-            </FormGroup>
-          </div>  
-          <div className="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-            <FormGroup>
-              <Label for="year">Year</Label>
-              <Input 
-                type="select" 
-                name="year" 
-                id="year" 
-                placeholder="Year"
-                onChange={ e => setFormData({ ...formData, year: e.target.value}) } 
-                className={ validYear ? '' : 'is-invalid' }
-              >
-                <option value="0"></option>
-                { getYears().map((value, key) => <option value={value} key={key}>{value}</option>) }
-              </Input>
-            </FormGroup>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-            <Button type="sumbit" color="primary" disabled={ state === 'loading' || state === 'sent' }>
-              Sign up&nbsp; 
-              <div className="spinner-border spinner-border-sm" role="status" style={ state === 'loading' ? {display: 'block'} : {display: 'none'} }>
-                <span className="visually-hidden">Loading...</span>
+            <div className="row">
+              <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <h1>Register</h1>
               </div>
-            </Button> 
+            </div>
+            <div className="row">          
+              <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                { message !== '' ? <div className="alert alert-danger" role="alert">{ message }</div> : '' }
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <Form onSubmit={ register }>
+                  <div className="row">
+                    <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                      <FormGroup>
+                        <Input 
+                          type="text" 
+                          name="email" 
+                          id="email" 
+                          value={ formData.email }
+                          placeholder="Email" 
+                          onChange={ e => setFormData({ ...formData, email: e.target.value }) } 
+                          className={ validEmail ? '' : 'is-invalid' }
+                        />
+                      </FormGroup>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                      <FormGroup>
+                        <Input 
+                          type="text" 
+                          name="name" 
+                          id="name" 
+                          value={ formData.name }
+                          placeholder="Name" 
+                          onChange={ e => setFormData({ ...formData, name: e.target.value }) } 
+                          className={ validName ? '' : 'is-invalid' }
+                        />
+                      </FormGroup>
+                    </div>
+                    <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                      <FormGroup>
+                        <Input 
+                          type="text" 
+                          name="lastname" 
+                          id="lastname" 
+                          value={ formData.lastname }
+                          placeholder="Lastname" 
+                          onChange={ e => setFormData({ ...formData, lastname: e.target.value }) } 
+                          className={ validLastname ? '' : 'is-invalid' }
+                        />
+                      </FormGroup>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                      <FormGroup>
+                        <Input 
+                          type="password" 
+                          name="password" 
+                          id="password"
+                          value={ formData.password } 
+                          placeholder="Password" 
+                          onChange={ e => setFormData({ ...formData, password: e.target.value}) } 
+                          className={ validPassword ? '' : 'is-invalid' }
+                        />
+                      </FormGroup>
+                    </div>
+                    <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                      <FormGroup>
+                        <Input 
+                          type="password" 
+                          name="passwordconfirm" 
+                          id="passwordconfirm"
+                          value={ formData.passwordconfirm } 
+                          placeholder="Cornfirm Password" 
+                          onChange={ e => setFormData({ ...formData, passwordconfirm: e.target.value}) } 
+                          className={ validPasswordConfirm ? '' : 'is-invalid' }
+                        />
+                        <small className="text-danger" style={ !passwordMatch ? {display: 'block'} : {display: 'none'} }>* Passwords must match</small>
+                      </FormGroup>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                      <FormGroup>
+                        <Label for="day">Day</Label>
+                        <Input 
+                          type="select" 
+                          name="day" 
+                          id="day" 
+                          placeholder="Day" 
+                          onChange={ e => setFormData({ ...formData, day: e.target.value}) } 
+                          className={ 'form-select' && validDay ? '' : 'is-invalid' }
+                        >
+                          <option value="0"></option>
+                          { getDays().map((value, key) => <option value={value} key={key}>{value}</option>) }
+                        </Input>
+                      </FormGroup>
+                    </div>
+                    <div className="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                      <FormGroup>
+                        <Label for="month">Month</Label>
+                        <Input 
+                          type="select" 
+                          name="month" 
+                          id="month" 
+                          placeholder="Month"
+                          onChange={ e => setFormData({ ...formData, month: e.target.value}) } 
+                          className={ validMonth ? '' : 'is-invalid' }
+                        >
+                          <option value="0"></option>
+                          <option value="1">January</option>
+                          <option value="2">February</option>
+                          <option value="3">March</option>
+                          <option value="4">April</option>
+                          <option value="5">May</option>
+                          <option value="6">June</option>
+                          <option value="7">July</option>
+                          <option value="8">August</option>
+                          <option value="9">September</option>
+                          <option value="10">October</option>
+                          <option value="11">November</option>
+                          <option value="12">December</option>
+                        </Input>
+                      </FormGroup>
+                    </div>  
+                    <div className="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                      <FormGroup>
+                        <Label for="year">Year</Label>
+                        <Input 
+                          type="select" 
+                          name="year" 
+                          id="year" 
+                          placeholder="Year"
+                          onChange={ e => setFormData({ ...formData, year: e.target.value}) } 
+                          className={ validYear ? '' : 'is-invalid' }
+                        >
+                          <option value="0"></option>
+                          { getYears().map((value, key) => <option value={value} key={key}>{value}</option>) }
+                        </Input>
+                      </FormGroup>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                      <Button type="sumbit" color="primary" disabled={ state === 'loading' || state === 'sent' }>
+                        Register&nbsp; 
+                        <div className="spinner-border spinner-border-sm" role="status" style={ state === 'loading' ? {display: 'block'} : {display: 'none'} }>
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                      </Button> 
 
-            <p><span>By signing up, you agree to our <Link to="/termsofuse">terms of use</Link></span></p>
+                      <p><span>By signing up, you agree to our <Link to="/termsofuse">terms of use</Link></span></p>
+                    </div>
+                  </div>
+                </Form>
+              </div>
+              <div className="row">
+                <div className="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                  <p><span>Already have an account? </span><Link to="/">Login</Link></p>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </Form>
-      
-      <div className="row">
-        <div className="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
-          <p><span>Already have an account? </span><Link to="/">Login</Link></p>
         </div>
       </div>
     </div>
