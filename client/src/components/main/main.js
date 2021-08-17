@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useAuth } from '../../context/context';
-import Profile from '../profile/profile';
 import { useHistory } from 'react-router-dom';
 
 const Main = () => {
@@ -15,9 +14,8 @@ const Main = () => {
 
   return (
     <div>
-      <Profile />
-      <h2>This is Main</h2>
-      <p>Lorem ipsum</p>
+      <h2>Activities avalilable</h2>
+      <p>Chose the activities you are interested</p>
     </div>
   );
 }

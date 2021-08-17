@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Form, FormGroup, Alert } from 'reactstrap';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import md5 from 'md5';
 import axios from 'axios';
 import './login.css';
@@ -92,10 +92,9 @@ const Login = () => {
   //Render
   return (
     <div className="login">
-      
       <div className="row">
         <div className="row">
-          <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 text-end">
+          <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 text-end d-none d-md-block">
             <img src={ process.env.PUBLIC_URL + '/img/phone.png' } alt="Mobile" title="Mobile" />
           </div>
           <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -142,6 +141,12 @@ const Login = () => {
                     </div>
                   </Button>
                 </Form>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <br />
+                <p>Don't have an account? <Link to="/register">Register</Link></p>
               </div>
             </div>
           </div>
