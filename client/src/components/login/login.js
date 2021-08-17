@@ -92,49 +92,59 @@ const Login = () => {
   //Render
   return (
     <div className="login">
+      
       <div className="row">
-        <div className="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
-          { message !== '' ? <Alert id="alert" color="danger">{ message }</Alert> : '' }
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-          <h1>Login</h1>{state.emailState}
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-          <Form onSubmit={ login }>
-            <FormGroup>
-              <Input 
-                type="text" 
-                name="email" 
-                id="email" 
-                value={ email }
-                placeholder="Email" 
-                onChange={ e => setEmail(e.target.value) } 
-                className={ validEmail }
-              />
-            </FormGroup>
-            <FormGroup>
-              <Input 
-                type="password" 
-                name="password" 
-                id="password"
-                value={ password } 
-                placeholder="Password" 
-                onChange={ e => setPassword(e.target.value) } 
-                className={ validPassword }
-              />
-            </FormGroup>
-
-            <Button type="sumbit" color="primary" disabled={ state === 'loading' }>
-              Login&nbsp; 
-              <div className="spinner-border spinner-border-sm" role="status" style={ state === 'loading' ? {display: 'block'} : {display: 'none'} }>
-                <span className="visually-hidden">Loading...</span>
+        <div className="row">
+          <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 text-end">
+            <img src={ process.env.PUBLIC_URL + '/img/phone.png' } alt="Mobile" title="Mobile" />
+          </div>
+          <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <div className="row">
+              <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <h1>Login</h1>
               </div>
-            </Button>
-          </Form>
+            </div>
+            <div className="row">
+              <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                { message !== '' ? <Alert id="alert" color="danger">{ message }</Alert> : '' }
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <Form onSubmit={ login }>
+                  <FormGroup>
+                    <Input 
+                      type="text" 
+                      name="email" 
+                      id="email" 
+                      value={ email }
+                      placeholder="Email" 
+                      onChange={ e => setEmail(e.target.value) } 
+                      className={ validEmail }
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Input 
+                      type="password" 
+                      name="password" 
+                      id="password"
+                      value={ password } 
+                      placeholder="Password" 
+                      onChange={ e => setPassword(e.target.value) } 
+                      className={ validPassword }
+                    />
+                  </FormGroup><br />
+
+                  <Button type="sumbit" color="primary" disabled={ state === 'loading' }>
+                    Login&nbsp; 
+                    <div className="spinner-border spinner-border-sm" role="status" style={ state === 'loading' ? {display: 'block'} : {display: 'none'} }>
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  </Button>
+                </Form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
