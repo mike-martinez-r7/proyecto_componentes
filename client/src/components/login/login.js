@@ -1,31 +1,37 @@
-import React, { useState } from 'react';
-import { Button, Input, Form, FormGroup, Spinner, Alert } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { Button, Input, Form, FormGroup, Alert } from 'reactstrap';
+import { useHistory } from 'react-router-dom';
 import md5 from 'md5';
 import axios from 'axios';
 import './login.css';
+import { useAuth } from '../../context/context';
 
 const Login = () => {
   // Properties
+  const auth = useAuth();
+  const history = useHistory();
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [state, setState] = useState('init');
   const [validEmail, setValidEmail] = useState('');
   const [validPassword, setValidPassword] = useState('');
-
+    
+  //Events
   const validate = () => {
     let isValid = true;
     let emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (emailRegex.test(email)) {
-      setValidEmail('is-valid');
+      setValidEmail('');
     } else {
       setValidEmail('is-invalid');
       isValid = false;
     }
 
     if (password !== '') {
-      setValidPassword('is-valid');
+      setValidPassword('');
     } else {
       setValidPassword('is-invalid');
       isValid = false;
@@ -54,60 +60,91 @@ const Login = () => {
         }
       })
       .then((response) => {
-        alert('Login OK');
+        let userExists = response.data.success;
+
+        if (userExists) {
+          auth.login(response.data.data);
+        } else {
+          setMessage(response.data.message);
+        }
+
+        setState('init');
       })
       .catch((error) => {
-        console.log(error.response.data.message);
-        //setMessage(error.response.data.message.message);
-      });
+        let errors = '';
 
-      setState('init');
+        error.response.data.message.forEach(e => {
+          errors += e.message;
+        }); 
+
+        setMessage(errors);
+        setState('init');
+      });
     }
   };
 
+  useEffect(() => {
+    if (auth.user && auth.user.id) {
+      history.push('/main');
+    }
+  });
+
+  //Render
   return (
     <div className="login">
+      
       <div className="row">
-        <div className="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
-          { message !== '' ? <Alert id="alert" color="danger">{ message }</Alert> : '' }
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-          <h1>Login</h1>{state.emailState}
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-          <Form onSubmit={ login }>
-            <FormGroup>
-              <Input 
-                type="text" 
-                name="email" 
-                id="email" 
-                value={ email }
-                placeholder="Email" 
-                onChange={ e => setEmail(e.target.value) } 
-                className={ validEmail }
-              />
-            </FormGroup>
-            <FormGroup>
-              <Input 
-                type="password" 
-                name="password" 
-                id="password"
-                value={ password } 
-                placeholder="Password" 
-                onChange={ e => setPassword(e.target.value) } 
-                className={ validPassword }
-              />
-            </FormGroup>
+        <div className="row">
+          <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 text-end">
+            <img src={ process.env.PUBLIC_URL + '/img/phone.png' } alt="Mobile" title="Mobile" />
+          </div>
+          <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <div className="row">
+              <div className="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <h1>Login</h1>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                { message !== '' ? <Alert id="alert" color="danger">{ message }</Alert> : '' }
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <Form onSubmit={ login }>
+                  <FormGroup>
+                    <Input 
+                      type="text" 
+                      name="email" 
+                      id="email" 
+                      value={ email }
+                      placeholder="Email" 
+                      onChange={ e => setEmail(e.target.value) } 
+                      className={ validEmail }
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Input 
+                      type="password" 
+                      name="password" 
+                      id="password"
+                      value={ password } 
+                      placeholder="Password" 
+                      onChange={ e => setPassword(e.target.value) } 
+                      className={ validPassword }
+                    />
+                  </FormGroup><br />
 
-            <Button type="sumbit" color="primary">
-              <span className="mr-4">Login</span>&nbsp;
-              { state === 'loading' ? <Spinner color="light" size="sm"><span className="visually-hidden">Loading...</span></Spinner>: '' }
-            </Button>
-          </Form>
+                  <Button type="sumbit" color="primary" disabled={ state === 'loading' }>
+                    Login&nbsp; 
+                    <div className="spinner-border spinner-border-sm" role="status" style={ state === 'loading' ? {display: 'block'} : {display: 'none'} }>
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  </Button>
+                </Form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
