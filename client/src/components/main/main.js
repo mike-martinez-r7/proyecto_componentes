@@ -20,7 +20,13 @@ const Main = () => {
 
   const subscribe = (id) => {
     console.log('Clicked on ' + id);
-    
+    const fetchSubscription = async () => { 
+      await axios(
+        'http://boyataapi-env.eba-rghaf25n.us-east-1.elasticbeanstalk.com/api/activities/' + id + '/subscribe/' + auth.user.id
+      );
+    };
+
+    fetchSubscription();
   };
 
   useEffect(() => {
@@ -45,7 +51,7 @@ const Main = () => {
       setActivities(result.data);
     };
 
-    fetchData()
+    fetchData();
   }, []);
 
   if (activities !== 'loading')  {
@@ -70,12 +76,21 @@ const Main = () => {
                     <h5 className="card-title">{ activity.name }</h5>
                     <p className="card-text">{ activity.descr }</p>
                     
-                    <Button type="sumbit" color="primary" disabled={ state === 'loading' } onClick={ () => subscribe(activity.id) }>
-                      Subscribe&nbsp; 
-                      <div className="spinner-border spinner-border-sm" role="status" style={ state === 'loading' ? {display: 'block'} : {display: 'none'} }>
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                    </Button>
+                    { 
+                      (activity.assistants.findIndex((e) => e.id === auth.user.id)) === -1 
+                      ?
+                        <Button type="sumbit" color="primary" disabled={ state === 'loading' } onClick={ () => subscribe(activity.id) }>
+                          Subscribe&nbsp; 
+                          <div className="spinner-border spinner-border-sm" role="status" style={ state === 'loading' ? {display: 'block'} : {display: 'none'} }>
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        </Button>
+                      : 
+                      <Button type="sumbit" color="primary" disabled={ state === 'loading' } disabled={true}>
+                        Subscribed
+                      </Button> 
+                    }
+                    &nbsp;&nbsp;<small>{ activity.assistants.length } assistan(s) subscribed</small>
                   </div>
                 </div>
               </div>
