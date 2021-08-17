@@ -9,6 +9,22 @@ const ActivityController = {
     res.send(activities.data);
   },
 
+  subscribe : async (req, res) => {
+    let activityId = req.params.activity;
+    let userId = req.params.user;
+
+    let result = await ActivityService.subscribe(userId, activityId);
+
+    if (result && !result.success) {
+      res.send({
+        success: false,
+        message: result.error
+      });
+    }
+
+    res.send(result);
+  },
+
   register : (req, res) => {
     //Insert activity data in DB
     let activityCreated = ActivityService.register(req.body);

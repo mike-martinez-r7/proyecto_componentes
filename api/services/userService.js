@@ -23,6 +23,25 @@ const UserService = {
     }; 
   },
 
+  getById : async (paramId) => {
+    let awsConfig = new AWS.Config();
+    AWS.config.update(config.aws_remote_config);
+    const docUser = new AWS.DynamoDB.DocumentClient();
+
+    let params = {
+      TableName: config.users_table_name,
+      Key: { id: paramId }
+    };
+
+    let awsRequest = await docUser.get(params);
+    let data = await awsRequest.promise();
+
+    return {
+      success: true,
+      data: data.Item || {}
+    };
+  },
+
   validate : (userdata) => {
     const schema = joi.object({
       email: joi.string().email().required().messages({
