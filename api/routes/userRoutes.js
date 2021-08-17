@@ -6,6 +6,7 @@ const routes = () => {
 
     userRouter
         .get('/', (req, res) => userController.get(req, res))
+        .get('/:id', (req, res) => userController.getById(req, res))
         .post('/', (req, res) => userController.register(req, res))
         .post('/login', (req, res) => userController.login(req, res));
 

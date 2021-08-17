@@ -38,6 +38,19 @@ const UserController = {
     });
   },
 
+  getById : async (req, res) => {
+    let user = await UserService.getById(req.params.id);
+
+    if (user && !user.success) {
+      res.send({
+        success: false,
+        message: user.error
+      });
+    }
+
+    res.send(user.data);
+  },
+
   login : async (req, res) => {
     //Validate login data
     const { error, value } = UserService.validateLogin(req.body);
