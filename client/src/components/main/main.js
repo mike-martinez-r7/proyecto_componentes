@@ -21,12 +21,26 @@ const Main = () => {
   const subscribe = (id) => {
     console.log('Clicked on ' + id);
     const fetchSubscription = async () => { 
-      await axios(
-        'http://boyataapi-env.eba-rghaf25n.us-east-1.elasticbeanstalk.com/api/activities/' + id + '/subscribe/' + auth.user.id
-      );
+      await axios('http://boyataapi-env.eba-rghaf25n.us-east-1.elasticbeanstalk.com/api/activities/' + id + '/subscribe/' + auth.user.id);
     };
-
     fetchSubscription();
+  };
+
+  const fetchData = async () => { 
+    const result = await axios('http://boyataapi-env.eba-rghaf25n.us-east-1.elasticbeanstalk.com/api/activities');
+    result.data.sort(( a, b ) => {
+      if ( a.date < b.date ){
+        return -1;
+      }
+
+      if ( a.date > b.date ){
+        return 1;
+      }
+
+      return 0;
+    });
+
+    setActivities(result.data);
   };
 
   useEffect(() => {
@@ -34,35 +48,18 @@ const Main = () => {
       history.push('/');
     }
 
-    const fetchData = async () => { 
-      const result = await axios('http://boyataapi-env.eba-rghaf25n.us-east-1.elasticbeanstalk.com/api/activities');
-      result.data.sort(( a, b ) => {
-        if ( a.date < b.date ){
-          return -1;
-        }
-
-        if ( a.date > b.date ){
-          return 1;
-        }
-
-        return 0;
-      });
-
-      setActivities(result.data);
-    };
-
     fetchData();
   }, []);
 
   if (activities !== 'loading')  {
     return (
       <div className="activities">
-        <h2>Activities available</h2>
+        <h2>Activities availables en demo</h2>
         <p>Chose the activities you are interested and subscribe</p>
 
         { 
           activities.map( (activity, key ) => (
-            <div className="card" key={ key } ref={ (e) => itemEls.current.push(e) }>
+            <div className="card" key={ key } id={activity.id}>
               <div className="card-header">
                 {(new Date(activity.date)).toLocaleDateString('en-US', DATE_OPTIONS)} &nbsp;&nbsp; | &nbsp;&nbsp;
                 { new Date(activity.date).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3") }
@@ -79,7 +76,13 @@ const Main = () => {
                     { 
                       (activity.assistants.findIndex((e) => e.id === auth.user.id)) === -1 
                       ?
-                        <Button type="sumbit" color="primary" disabled={ state === 'loading' } onClick={ () => subscribe(activity.id) }>
+                        <Button 
+                          type="sumbit" 
+                          color="primary" 
+                          disabled={ state === 'loading' }
+                          onClick={ () => subscribe(activity.id) } 
+                          ref={ (e) => itemEls.current.push(e) }
+                        >
                           Subscribe&nbsp; 
                           <div className="spinner-border spinner-border-sm" role="status" style={ state === 'loading' ? {display: 'block'} : {display: 'none'} }>
                             <span className="visually-hidden">Loading...</span>

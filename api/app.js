@@ -16,7 +16,7 @@ app.use('/api/companies', companyRouter);
 app.use('/api/activities', activityRouter);
 
 app.get('/api', (req, res) => {
-  res.send('Hello from the API');
+  res.send('Hello from the API en demo');
 });
 
 app.listen(port, () => {
