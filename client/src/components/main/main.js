@@ -54,7 +54,7 @@ const Main = () => {
   if (activities !== 'loading')  {
     return (
       <div className="activities">
-        <h2>Activities available</h2>
+        <h2>Activities availables en demo</h2>
         <p>Chose the activities you are interested and subscribe</p>
 
         { 

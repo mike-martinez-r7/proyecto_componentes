@@ -99,7 +99,6 @@ const ActivityService = {
     };
     let awsRequestUser = await docUser.get(paramsUser);
     let currentUser = await awsRequestUser.promise();
-   
     delete currentUser.Item.password;
 
     //Add the new user to subscribers
@@ -113,6 +112,38 @@ const ActivityService = {
       ReturnValues : 'UPDATED_NEW'
     };
 
+
+    //Send data to SQS
+    let sqs = new AWS.SQS({apiVersion: '2012-11-05'});
+    let paramsSQS = {
+      DelaySeconds: 5,
+      MessageAttributes: {
+        'Activity': {
+          DataType: 'String',
+          StringValue: currentActivity.Item.name
+        },
+        'User': {
+          DataType: 'String',
+          StringValue: currentUser.Item.name + ' ' + currentUser.Item.lastname
+        },
+        'Date': {
+          DataType: 'String',
+          StringValue: new Date().toDateString()
+        }
+      },
+      MessageBody: 'New Resevation ' + new Date().toDateString(),
+      QueueUrl: 'https://sqs.us-east-2.amazonaws.com/394903384098/NotificationQueue'
+    };
+
+    sqs.sendMessage(paramsSQS, function(err, data) {
+      if (err) {
+        console.log('Error on send SQS', err);
+      } else {
+        console.log('SQS Message sent: ', data.MessageId);
+      }
+    });
+
+    //Send subscription request
     docActivity.update(paramsUpdateActivity, (error, data) => {
       if (error) {
         return {
